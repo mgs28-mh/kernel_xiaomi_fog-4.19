@@ -358,6 +358,10 @@ __v4l2_find_nearest_size(const void *array, size_t array_size,
  */
 void v4l2_get_timestamp(struct timeval *tv);
 
+void v4l2_simplify_fraction(u32 *numerator, u32 *denominator,
+		unsigned int n_terms, unsigned int threshold);
+u32 v4l2_fraction_to_interval(u32 numerator, u32 denominator);
+
 /**
  * v4l2_g_parm_cap - helper routine for vidioc_g_parm to fill this in by
  *      calling the g_frame_interval op of the given subdev. It only works
