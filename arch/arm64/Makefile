@@ -51,6 +51,7 @@ endif
 
 ifeq ($(cc-name),clang)
 KBUILD_CFLAGS	+= -mno-implicit-float
+KBUILD_CFLAGS	+= -mcpu=cortex-a53+crypto+dotprod
 else
 KBUILD_CFLAGS	+= -mgeneral-regs-only
 endif
