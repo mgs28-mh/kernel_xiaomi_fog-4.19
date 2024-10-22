@@ -115,7 +115,7 @@
 #define UART_CORE2X_VOTE	(5000)
 #define UART_CONSOLE_CORE2X_VOTE (960)
 
-#define WAKEBYTE_TIMEOUT_MSEC	(2000) /* 2 Seconds */
+#define WAKEBYTE_TIMEOUT_MSEC	(100)
 #define WAIT_XFER_MAX_ITER	(2)
 #define WAIT_XFER_MAX_TIMEOUT_US	(150)
 #define WAIT_XFER_MIN_TIMEOUT_US	(100)
@@ -3224,9 +3224,11 @@ static void msm_geni_serial_debug_init(struct uart_port *uport, bool console)
 	struct msm_geni_serial_port *msm_port = GET_DEV_PORT(uport);
 	char name[35];
 
+#ifdef CONFIG_DEBUG_FS
 	msm_port->dbg = debugfs_create_dir(dev_name(uport->dev), NULL);
 	if (IS_ERR_OR_NULL(msm_port->dbg))
 		dev_err(uport->dev, "Failed to create dbg dir\n");
+#endif
 
 	if (!console) {
 		memset(name, 0, sizeof(name));
