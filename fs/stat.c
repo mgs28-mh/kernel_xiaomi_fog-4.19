@@ -17,9 +17,6 @@
 #include <linux/syscalls.h>
 #include <linux/pagemap.h>
 #include <linux/compat.h>
-#ifdef CONFIG_SUS_FS
-#include <linux/suspicious.h>
-#endif
 
 #include <linux/uaccess.h>
 #include <asm/unistd.h>
@@ -113,12 +110,6 @@ int vfs_getattr(const struct path *path, struct kstat *stat,
 {
 	int retval;
 
-#ifdef CONFIG_SUS_FS
-	if (is_suspicious_path(path)) {
-		return -ENOENT;
-	}
-#endif	
-
 	retval = security_inode_getattr(path);
 	if (retval)
 		return retval;
@@ -157,10 +148,6 @@ int vfs_statx_fd(unsigned int fd, struct kstat *stat,
 }
 EXPORT_SYMBOL(vfs_statx_fd);
 
-#ifdef CONFIG_KSU
-extern int ksu_handle_stat(int *dfd, const char __user **filename_user);
-#endif
-
 /**
  * vfs_statx - Get basic and extra attributes by filename
  * @dfd: A file descriptor representing the base dir for a relative filename
@@ -182,10 +169,6 @@ int vfs_statx(int dfd, const char __user *filename, int flags,
 	struct path path;
 	int error = -EINVAL;
 	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
-
-#ifdef CONFIG_KSU
-	ksu_handle_stat(&dfd, &filename);
-#endif
 
 	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT |
 		       AT_EMPTY_PATH | KSTAT_QUERY_FLAGS)) != 0)
